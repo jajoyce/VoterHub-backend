@@ -1,9 +1,7 @@
 const { Sequelize, DataTypes } = require("sequelize");
 
-// Option 1: Passing a connection URI
-// const sequelize = new Sequelize('postgres://user:pass@example.com:5432/dbname') // Example for postgres
+// const sequelize = new Sequelize('postgres://user:pass@example.com:5432/dbname')
 
-// Option 3: Passing parameters separately (other dialects)
 const sequelize = new Sequelize("voter_hub", "jaj", "passwordGoesHere", {
   host: "localhost",
   dialect: "postgres",
@@ -24,23 +22,8 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 db.pgConnect = pgConnect;
 
-// db.User = require("./User")(Sequelize, sequelize);
+db.User = require("./User")(sequelize, DataTypes);
 
-db.User = sequelize.define("User", {
-  userName: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  }, 
-  firstName: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  lastName: {
-    type: DataTypes.STRING,
-  },
-}, {
-  tableName: "users"
-});
 
 module.exports = db;
 
