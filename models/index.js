@@ -1,37 +1,93 @@
-'use strict';
+const { Sequelize, DataTypes } = require("sequelize");
 
-const fs = require('fs');
-const path = require('path');
-const Sequelize = require('sequelize');
-const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.json')[env];
-const db = {};
+// Option 1: Passing a connection URI
+// const sequelize = new Sequelize('postgres://user:pass@example.com:5432/dbname') // Example for postgres
 
-let sequelize;
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
-} else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
-}
-
-fs
-  .readdirSync(__dirname)
-  .filter(file => {
-    return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
-  })
-  .forEach(file => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
-    db[model.name] = model;
-  });
-
-Object.keys(db).forEach(modelName => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
-  }
+// Option 3: Passing parameters separately (other dialects)
+const sequelize = new Sequelize("voter_hub", "jaj", "passwordGoesHere", {
+  host: "localhost",
+  dialect: "postgres",
 });
 
-db.sequelize = sequelize;
+async function pgConnect() {
+  try {
+    await sequelize.authenticate();
+    console.log("DB SUCCESSFULLY CONNECTED.");
+  } catch (error) {
+    console.error("UNABLE TO CONNECT TO DATABASE:", error);
+  }
+}
+
+const db = {};
+
 db.Sequelize = Sequelize;
+db.sequelize = sequelize;
+db.pgConnect = pgConnect;
+
+// db.User = require("./User")(Sequelize, sequelize);
+
+db.User = sequelize.define("User", {
+  userName: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  }, 
+  firstName: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  lastName: {
+    type: DataTypes.STRING,
+  },
+}, {
+  tableName: "users"
+});
 
 module.exports = db;
+
+
+
+
+
+
+
+//////////
+// FROM SEQUELIZE-CLI:
+//////////
+
+// 'use strict';
+
+// const fs = require('fs');
+// const path = require('path');
+// const Sequelize = require('sequelize');
+// const basename = path.basename(__filename);
+// const env = process.env.NODE_ENV || 'development';
+// const config = require(__dirname + '/../config/config.json')[env];
+// const db = {};
+
+// let sequelize;
+// if (config.use_env_variable) {
+//   sequelize = new Sequelize(process.env[config.use_env_variable], config);
+// } else {
+//   sequelize = new Sequelize(config.database, config.username, config.password, config);
+// }
+
+// fs
+//   .readdirSync(__dirname)
+//   .filter(file => {
+//     return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
+//   })
+//   .forEach(file => {
+//     const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
+//     db[model.name] = model;
+//   });
+
+// Object.keys(db).forEach(modelName => {
+//   if (db[modelName].associate) {
+//     db[modelName].associate(db);
+//   }
+// });
+
+// db.sequelize = sequelize;
+// db.Sequelize = Sequelize;
+
+// module.exports = db;

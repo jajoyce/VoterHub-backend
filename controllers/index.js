@@ -1,3 +1,4 @@
 module.exports = {
-    civicInfo: require('./civicInfoAPIController')
+    civicInfo: require('./civicInfoAPIController'), 
+    user: require('./userController')
 }
