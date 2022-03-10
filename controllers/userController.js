@@ -49,4 +49,18 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+router.put("/:id", async (req, res) => {
+  try {
+    res.json(
+      await User.update(req.body, {
+        where: { id: req.params.id },
+      })
+    );
+  } catch (err) {
+    res
+      .status(500)
+      .send({ message: err.message || "An error occured retrieving User." });
+  }
+});
+
 module.exports = router;
