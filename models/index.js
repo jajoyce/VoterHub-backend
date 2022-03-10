@@ -23,15 +23,17 @@ db.sequelize = sequelize;
 db.pgConnect = pgConnect;
 
 db.User = require("./User")(sequelize, DataTypes);
+db.NoteRep = require("./NoteRep")(sequelize, DataTypes);
 
+db.NoteRep.User = db.NoteRep.belongsTo(db.User, {
+  through: "user_notes_rep",
+  as: "user",
+});
+
+// db.User.sync({ force: true });
+// db.NoteRep.sync({ force: true });
 
 module.exports = db;
-
-
-
-
-
-
 
 //////////
 // FROM SEQUELIZE-CLI:
