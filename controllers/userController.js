@@ -43,23 +43,29 @@ router.get("/:id", async (req, res) => {
   try {
     res.json(await User.findByPk(req.params.id));
   } catch (err) {
-    res
-      .status(500)
-      .send({ message: err.message || "An error occured retrieving User." });
+    res.status(500).send({
+      message: err.message || "An error occured retrieving the User.",
+    });
   }
 });
 
 router.put("/:id", async (req, res) => {
   try {
-    res.json(
-      await User.update(req.body, {
-        where: { id: req.params.id },
-      })
-    );
+    res.json(await User.update(req.body, { where: { id: req.params.id } }));
   } catch (err) {
     res
       .status(500)
-      .send({ message: err.message || "An error occured retrieving User." });
+      .send({ message: err.message || "An error occured updating the User." });
+  }
+});
+
+router.delete("/:id", async (req, res) => {
+  try {
+    res.json(await User.destroy({ where: { id: req.params.id } }));
+  } catch (err) {
+    res
+      .status(500)
+      .send({ message: err.message || "An error occurred deleting the User." });
   }
 });
 
