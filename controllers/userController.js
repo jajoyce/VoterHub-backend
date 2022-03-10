@@ -14,8 +14,10 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  if ((!req.body.username || !req.body.password || !req.body.firstName)) {
-    res.status(400).send({ message: "Username, Password, and First Name are required." });
+  if (!req.body.username || !req.body.password || !req.body.firstName) {
+    res
+      .status(400)
+      .send({ message: "Username, Password, and First Name are required." });
     return;
   } else {
     const newUser = {
@@ -30,10 +32,20 @@ router.post("/", async (req, res) => {
       const user = await User.create(newUser);
       res.json(user);
     } catch (err) {
-      res
-        .status(500)
-        .send({ message: err.message || "An error occurred creating new User." });
+      res.status(500).send({
+        message: err.message || "An error occurred creating new User.",
+      });
     }
+  }
+});
+
+router.get("/:id", async (req, res) => {
+  try {
+    res.json(await User.findByPk(req.params.id));
+  } catch (err) {
+    res
+      .status(500)
+      .send({ message: err.message || "An error occured retrieving User." });
   }
 });
 
