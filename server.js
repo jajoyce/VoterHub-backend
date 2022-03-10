@@ -17,6 +17,7 @@ app.use(express.json());
 
 app.use("/reps", controllers.civicInfo);
 app.use("/users", controllers.user);
+app.use("/notes-rep", controllers.noteRep);
 
 app.get("/", (req, res) => {
   res.send("Hello, world. This is working.");
