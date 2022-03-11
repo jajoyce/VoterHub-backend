@@ -15,7 +15,7 @@ app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());
 
-app.use("/reps", controllers.civicInfo);
+app.use("/civicAPI", controllers.civicInfo);
 app.use("/users", controllers.user);
 app.use("/notes-rep", controllers.noteRep);
 
