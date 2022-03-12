@@ -37,6 +37,10 @@ db.NoteRep.User = db.NoteRep.belongsTo(db.User, {
 
 module.exports = db;
 
+
+
+
+
 //////////
 // FROM SEQUELIZE-CLI:
 //////////

@@ -16,7 +16,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 
 app.use("/civicAPI", controllers.civicInfo);
-app.use("/users", controllers.user);
+app.use("/auth", controllers.user);
 app.use("/notes-rep", controllers.noteRep);
 
 app.get("/", (req, res) => {
