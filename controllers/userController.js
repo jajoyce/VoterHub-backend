@@ -1,15 +1,23 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 const db = require("../models");
 const User = db.User;
+
+const createJWT = (userID) => {
+  const payload = { id: userID };
+  return jwt.sign(payload, process.env.JWT_KEY, { expiresIn: "1h" });
+};
 
 router.post("/register", async (req, res) => {
   const { username, password, firstName, lastName, address, registeredVoter } =
     req.body;
 
-  if (!username || !password || !firstName)
+  if (!username || !password || !firstName) {
     return res.status(400).json("Username, Password, and First Name required.");
+  }
 
   try {
     const existingUser = await User.findOne({ where: { username: username } });
@@ -22,30 +30,37 @@ router.post("/register", async (req, res) => {
     newUser.password = hashedPassword;
 
     const user = await User.create(newUser);
-    res.json(user);
+
+    const jwToken = createJWT(user.id);
+
+    return res.status(201).json({ jwToken });
   } catch (err) {
     console.log(err);
-    res.status(500).json(err.message || "An error occurred creating new User.");
+    return res.status(500).json(err.message || "Server error during signup.");
   }
 });
 
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
-  if (!username || !password)
+  if (!username || !password) {
     return res.status(400).json("Username and Password required.");
+  }
 
   try {
     const user = await User.findOne({ where: { username: username } });
-
     if (!user) return res.status(401).json("Invalid credentials.");
 
     const pwValid = await bcrypt.compare(password, user.password);
-
     if (!pwValid) return res.status(401).json("Invalid credentials.");
 
-    return res.json(user)
-  } catch (err) {}
+    const jwToken = createJWT(user.id);
+
+    return res.status(200).json({ jwToken });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err.mesage || "Server error during login.");
+  }
 });
 
 // Temp route for testing. Remember to remove.
