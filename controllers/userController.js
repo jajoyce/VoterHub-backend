@@ -5,9 +5,10 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const db = require("../models");
 const User = db.User;
+const authorize = require("../middleware/authorize");
 
 const createJWT = (userID) => {
-  const payload = { id: userID };
+  const payload = { userID: userID };
   return jwt.sign(payload, process.env.JWT_KEY, { expiresIn: "1h" });
 };
 
@@ -63,14 +64,21 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// Temp route for testing. Remember to remove.
+// Temp routes for dev testing
+router.post("/check-auth", authorize, (req, res) => {
+  try {
+    res.status(200).send(`Authorized. Your user ID is: ${req.userID}`);
+  } catch (err) {
+    console.log(err.message);
+    res.status(400).send(err.message || "Error in authorization.");
+  }
+});
+
 router.get("/", async (req, res) => {
   try {
     res.json(await User.findAll());
   } catch (err) {
-    res
-      .status(500)
-      .send({ message: err.message || "An error occured retrieving Users." });
+    res.status(500).send(err.message || "Error occurred retrieving Users.");
   }
 });
 
@@ -78,9 +86,7 @@ router.get("/:id", async (req, res) => {
   try {
     res.json(await User.findByPk(req.params.id));
   } catch (err) {
-    res.status(500).send({
-      message: err.message || "An error occured retrieving the User.",
-    });
+    res.status(500).send(err.message || "Error occured retrieving the User.");
   }
 });
 
@@ -88,9 +94,7 @@ router.put("/:id", async (req, res) => {
   try {
     res.json(await User.update(req.body, { where: { id: req.params.id } }));
   } catch (err) {
-    res
-      .status(500)
-      .send({ message: err.message || "An error occured updating the User." });
+    res.status(500).send(err.message || "Error occured updating the User.");
   }
 });
 
@@ -98,9 +102,7 @@ router.delete("/:id", async (req, res) => {
   try {
     res.json(await User.destroy({ where: { id: req.params.id } }));
   } catch (err) {
-    res
-      .status(500)
-      .send({ message: err.message || "An error occurred deleting the User." });
+    res.status(500).send(err.message || "Error occurred deleting the User.");
   }
 });
 
