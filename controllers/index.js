@@ -1,5 +1,5 @@
 module.exports = {
   civicInfo: require("./civicInfoAPIController"),
-  user: require("./userController"),
+  userAuth: require("./userAuthController"),
   noteRep: require("./noteRepController"),
 };
