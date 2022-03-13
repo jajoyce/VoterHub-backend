@@ -64,6 +64,17 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.get("/user", authorize, async (req, res) => {
+  try {
+    const user = await User.findByPk(req.userID);
+    const { username, firstName, lastName, address, registeredVoter } = user;
+    res.json({ username, firstName, lastName, address, registeredVoter });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send(err.message || "Error occured retrieving user data.");
+  }
+});
+
 // Temp routes for dev testing
 router.post("/check-auth", authorize, (req, res) => {
   try {

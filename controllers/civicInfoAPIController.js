@@ -14,12 +14,9 @@ const fetchRepsData = async (address) => {
 };
 
 router.get("/reps/:address", async (req, res) => {
-  console.log("reps");
-  console.log("KEY: " + key);
+  console.log("Reps API called for", req.params.address);
   try {
-    console.log("testing");
     const repsData = await fetchRepsData(req.params.address);
-    console.log(await repsData);
     res.json(repsData);
   } catch (error) {
     res.status(400).json(error);
