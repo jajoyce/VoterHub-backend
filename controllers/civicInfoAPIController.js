@@ -14,21 +14,33 @@ const fetchRepsData = async (address) => {
 };
 
 const parseAndFixRepsData = async (repsData) => {
-  const addressData = repsData.normalizedInput;
-  const { line1, city, state, zip } = addressData;
+  const { normalizedInput, divisions, offices, officials } = repsData;
 
   let parsedRepsData = {};
 
-  let parsedAddress = "";
-  if (line1) parsedAddress += line1 + ", ";
-  if (city) parsedAddress += city + ", ";
-  if (state) parsedAddress += state;
-  if (zip) parsedAddress += " " + zip;
+  const { line1, city, state, zip } = normalizedInput;
 
-  parsedRepsData.parsedAddress = parsedAddress;
+  let cleanAddress = "";
+  if (line1) cleanAddress += line1 + ", ";
+  if (city) cleanAddress += city + ", ";
+  if (state) cleanAddress += state;
+  if (zip) cleanAddress += " " + zip;
 
-  console.log("ADDRESS DATA", addressData);
-  console.log(parsedAddress);
+  parsedRepsData.cleanAddress = cleanAddress;
+
+  for (office of offices) {
+    for (officialIndex of office.officialIndices) {
+      officials[officialIndex].office = office.name;
+      officials[officialIndex].division = divisions[office.divisionId].name;
+      // console.log("------");
+      // console.log(officials[officialIndex].name);
+      // console.log(officials[officialIndex].office);
+      // console.log(officials[officialIndex].division);
+    }
+  }
+
+  parsedRepsData.officials = officials;
+
   console.log("PARSED DATA:", parsedRepsData);
 };
 
