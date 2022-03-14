@@ -79,12 +79,23 @@ const parseVoterInfoData = (voterInfoData) => {
   parsedVoterInfoData.cleanAddress = cleanAddress;
   parsedVoterInfoData.state = voterInfoData.state;
   parsedVoterInfoData.contests = voterInfoData.contests;
+  if (voterInfoData.pollingLocations) {
+    parsedVoterInfoData.pollingLocations = voterInfoData.pollingLocations;
+  }
+  if (voterInfoData.earlyVoteSites) {
+    parsedVoterInfoData.earlyVoteSites = voterInfoData.earlyVoteSites;
+  }
+  if (voterInfoData.dropOffLocations) {
+    parsedVoterInfoData.dropOffLocations = voterInfoData.dropOffLocations;
+  }
 
   console.log("PARSED VOTER INFO DATA:", parsedVoterInfoData);
 
   return parsedVoterInfoData;
 };
 
+// ----
+// ----
 // Routes
 router.get("/reps/:address", async (req, res) => {
   console.log("Reps API called for", req.params.address);
@@ -110,6 +121,8 @@ router.get("/voterinfo/:address", async (req, res) => {
   }
 });
 
+// ----
+// ----
 // Fix reps photos
 const fixPhotos = [
   [
