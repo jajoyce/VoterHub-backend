@@ -75,6 +75,43 @@ router.get("/user", authorize, async (req, res) => {
   }
 });
 
+router.put("/user", authorize, async (req, res) => {
+  const { username, password, firstName, lastName, address, registeredVoter } =
+    req.body;
+
+  if (!username || !password || !firstName) {
+    return res.status(400).json("Username, Password, and First Name required.");
+  }
+  try {
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const putUser = { username, firstName, lastName, address, registeredVoter };
+    putUser.password = hashedPassword;
+
+    const user = await User.update(putUser, { where: { id: req.userID } });
+
+    const jwToken = createJWT(user.id);
+
+    console.log("UPDATED USER");
+    return res.status(200).json({ jwToken });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send(err.message || "Error occured updating the User.");
+  }
+});
+
+// router.delete("/user", authorize, async (req, res) => {
+//   try {
+//     res.json(await User.destroy({ where: { id: req.userID } }));
+//   } catch (err) {
+//     res.status(500).send(err.message || "Error occurred deleting the User.");
+//   }
+// });
+
+// -----
+// -----
+// -----
 // Temp routes for dev testing
 router.post("/check-auth", authorize, (req, res) => {
   try {
