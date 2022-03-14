@@ -89,25 +89,29 @@ router.put("/user", authorize, async (req, res) => {
     const putUser = { username, firstName, lastName, address, registeredVoter };
     putUser.password = hashedPassword;
 
-    const user = await User.update(putUser, { where: { id: req.userID } });
+    const updated = await User.update(putUser, { where: { id: req.userID } });
 
-    const jwToken = createJWT(user.id);
-
-    console.log("UPDATED USER");
-    return res.status(200).json({ jwToken });
+    if (updated[0]) {
+      console.log("UPDATED USER", updated[0]);
+      const jwToken = createJWT(req.userID);
+      return res.status(200).json({ jwToken });
+    }
   } catch (err) {
     console.log(err);
     res.status(500).send(err.message || "Error occured updating the User.");
   }
 });
 
-// router.delete("/user", authorize, async (req, res) => {
-//   try {
-//     res.json(await User.destroy({ where: { id: req.userID } }));
-//   } catch (err) {
-//     res.status(500).send(err.message || "Error occurred deleting the User.");
-//   }
-// });
+router.delete("/user", authorize, async (req, res) => {
+  try {
+    const deleted = await User.destroy({ where: { id: req.userID } });
+    console.log(deleted);
+    res.status(200).json(deleted);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send(err.message || "Error occurred deleting the User.");
+  }
+});
 
 // -----
 // -----
