@@ -13,6 +13,12 @@ const fetchRepsData = async (address) => {
   return repsData.json();
 };
 
+const fetchVoterInfoData = async (address) => {
+  const voterInfoAPIURL = `${civicAPIURL}/voterinfo?address=${address}&key=${key}&electionId=2000`;
+  const voterInfoData = await fetch(voterInfoAPIURL);
+  return voterInfoData.json();
+};
+
 const parseAndFixRepsData = (repsData) => {
   const { normalizedInput, divisions, offices, officials } = repsData;
 
@@ -54,23 +60,57 @@ const parseAndFixRepsData = (repsData) => {
 
   parsedRepsData.officials = officials;
 
-  // console.log("PARSED DATA:", parsedRepsData);
+  // console.log("PARSED REPS DATA:", parsedRepsData);
 
   return parsedRepsData;
 };
 
+const parseVoterInfoData = (voterInfoData) => {
+  let parsedVoterInfoData = {};
+
+  const { line1, city, state, zip } = voterInfoData.normalizedInput;
+
+  let cleanAddress = "";
+  if (line1) cleanAddress += line1 + ", ";
+  if (city) cleanAddress += city + ", ";
+  if (state) cleanAddress += state;
+  if (zip) cleanAddress += " " + zip;
+
+  parsedVoterInfoData.cleanAddress = cleanAddress;
+  parsedVoterInfoData.state = voterInfoData.state;
+  parsedVoterInfoData.contests = voterInfoData.contests;
+
+  console.log("PARSED VOTER INFO DATA:", parsedVoterInfoData);
+
+  return parsedVoterInfoData;
+};
+
+// Routes
 router.get("/reps/:address", async (req, res) => {
   console.log("Reps API called for", req.params.address);
   try {
     const repsData = await fetchRepsData(req.params.address);
-    const myRepsData = parseAndFixRepsData(repsData);
-    console.log(myRepsData);
-    res.json(myRepsData);
-  } catch (error) {
-    res.status(400).json(error);
+    const cleanRepsData = parseAndFixRepsData(repsData);
+    console.log(cleanRepsData);
+    res.json(cleanRepsData);
+  } catch (err) {
+    res.status(400).json(err);
   }
 });
 
+router.get("/voterinfo/:address", async (req, res) => {
+  console.log("Voter Info API called for", req.params.address);
+  try {
+    const voterInfoData = await fetchVoterInfoData(req.params.address);
+    const cleanVoterInfoData = parseVoterInfoData(voterInfoData);
+    console.log(cleanVoterInfoData);
+    res.json(cleanVoterInfoData);
+  } catch (err) {
+    res.status(400).json(err);
+  }
+});
+
+// Fix reps photos
 const fixPhotos = [
   [
     "Joseph R. Biden",
