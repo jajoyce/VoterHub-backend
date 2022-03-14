@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
+const { Op } = require("sequelize");
 const db = require("../models");
 const User = db.User;
 const authorize = require("../middleware/authorize");
@@ -83,6 +84,11 @@ router.put("/user", authorize, async (req, res) => {
     return res.status(400).json("Username, Password, and First Name required.");
   }
   try {
+    const existingUser = await User.findOne({
+      where: { username: username, id: { [Op.ne]: req.userID } },
+    });
+    if (existingUser) return res.status(401).json("User already exists.");
+
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -105,7 +111,7 @@ router.put("/user", authorize, async (req, res) => {
 router.delete("/user", authorize, async (req, res) => {
   try {
     const deleted = await User.destroy({ where: { id: req.userID } });
-    console.log(deleted);
+    console.log("DELETED", deleted);
     res.status(200).json(deleted);
   } catch (err) {
     console.log(err);
@@ -115,8 +121,9 @@ router.delete("/user", authorize, async (req, res) => {
 
 // -----
 // -----
-// -----
 // Temp routes for dev testing
+// -----
+// -----
 router.post("/check-auth", authorize, (req, res) => {
   try {
     res.status(200).send(`Authorized. Your user ID is: ${req.userID}`);
