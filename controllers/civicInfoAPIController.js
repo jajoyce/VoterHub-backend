@@ -185,6 +185,11 @@ const fixPhotos = [
     "Mayor of Los Angeles",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Eric_Garcetti_in_Suit_and_Tie.jpg/800px-Eric_Garcetti_in_Suit_and_Tie.jpg",
   ],
+  [
+    "Karen Bass",
+    "U.S. Representative",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Karen-Bass-2012.jpg/800px-Karen-Bass-2012.jpg",
+  ],
 ];
 
 module.exports = router;

@@ -24,16 +24,25 @@ db.pgConnect = pgConnect;
 
 db.User = require("./User")(sequelize, DataTypes);
 db.NoteRep = require("./NoteRep")(sequelize, DataTypes);
+db.NoteInfo = require("./NoteInfo")(sequelize, DataTypes);
 
 db.User.NoteRep = db.User.hasMany(db.NoteRep, {
-  foreignKey: { name: "userId", defaultValue: 1 },
+  foreignKey: { name: "userID" },
 });
 db.NoteRep.User = db.NoteRep.belongsTo(db.User, {
-  foreignKey: { name: "userId" },
+  foreignKey: { name: "userID" },
+});
+
+db.User.NoteInfo = db.User.hasMany(db.NoteInfo, {
+  foreignKey: { name: "userID" },
+});
+db.NoteInfo.User = db.NoteInfo.belongsTo(db.User, {
+  foreignKey: { name: "userID" },
 });
 
 // db.User.sync({ force: true });
 // db.NoteRep.sync({ force: true });
+// db.NoteInfo.sync({ force: true });
 
 module.exports = db;
 
