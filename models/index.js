@@ -1,11 +1,40 @@
+require("dotenv").config();
+
 const { Sequelize, DataTypes } = require("sequelize");
+
+// For Heroku
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+  dialect: 'postgres',
+  protocol: 'postgres',
+  dialectOptions: {
+      ssl: {
+          require: true,
+          rejectUnauthorized: false
+      }
+  }
+});
+
+// For localhost
+// const sequelize = new Sequelize("voter_hub", null, null, {
+//   dialect: "postgres",
+// });
+// const sequelize = new Sequelize("voter_hub", "user", "password", {
+//   host: "localhost",
+//   dialect: "postgres",
+// });
 
 // const sequelize = new Sequelize('postgres://user:pass@example.com:5432/dbname')
 
-const sequelize = new Sequelize("voter_hub", "jaj", "passwordGoesHere", {
-  host: "localhost",
-  dialect: "postgres",
-});
+// const sequelize = new Sequelize(process.env.DATABASE_URL);
+
+// const sequelize = new Sequelize(process.env.DATABASE_URL, {
+//   dialectOptions: {
+//     ssl: {
+//       require: true,
+//       rejectUnauthorized: false,
+//     },
+//   },
+// });
 
 async function pgConnect() {
   try {
@@ -45,10 +74,6 @@ db.NoteInfo.User = db.NoteInfo.belongsTo(db.User, {
 // db.NoteInfo.sync({ force: true });
 
 module.exports = db;
-
-
-
-
 
 //////////
 // FROM SEQUELIZE-CLI:
