@@ -10,7 +10,7 @@ const db = require("./models");
 db.pgConnect();
 // For Heroku:
 // db.sequelize.sync();
-db.sequelize.sync({ force: true });
+// db.sequelize.sync({ force: true });
 
 app.use(cors());
 app.use(morgan("dev"));

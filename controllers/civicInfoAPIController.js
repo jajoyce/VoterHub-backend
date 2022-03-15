@@ -89,7 +89,7 @@ const parseVoterInfoData = (voterInfoData) => {
     parsedVoterInfoData.dropOffLocations = voterInfoData.dropOffLocations;
   }
 
-  console.log("PARSED VOTER INFO DATA:", parsedVoterInfoData);
+  // console.log("PARSED VOTER INFO DATA:", parsedVoterInfoData);
 
   return parsedVoterInfoData;
 };
@@ -102,9 +102,10 @@ router.get("/reps/:address", async (req, res) => {
   try {
     const repsData = await fetchRepsData(req.params.address);
     const cleanRepsData = parseAndFixRepsData(repsData);
-    console.log(cleanRepsData);
+    // console.log(cleanRepsData);
     res.json(cleanRepsData);
   } catch (err) {
+    console.log("GET REPS ERROR", err);
     res.status(400).json(err);
   }
 });
@@ -114,9 +115,10 @@ router.get("/voterinfo/:address", async (req, res) => {
   try {
     const voterInfoData = await fetchVoterInfoData(req.params.address);
     const cleanVoterInfoData = parseVoterInfoData(voterInfoData);
-    console.log(cleanVoterInfoData);
+    // console.log(cleanVoterInfoData);
     res.json(cleanVoterInfoData);
   } catch (err) {
+    console.log("GET VOTERINFO ERROR", err);
     res.status(400).json(err);
   }
 });

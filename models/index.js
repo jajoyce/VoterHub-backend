@@ -4,20 +4,21 @@ const { Sequelize, DataTypes } = require("sequelize");
 
 // For Heroku
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
-  dialect: 'postgres',
-  protocol: 'postgres',
+  dialect: "postgres",
+  protocol: "postgres",
   dialectOptions: {
-      ssl: {
-          require: true,
-          rejectUnauthorized: false
-      }
-  }
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+    },
+  },
 });
 
 // For localhost
 // const sequelize = new Sequelize("voter_hub", null, null, {
 //   dialect: "postgres",
 // });
+
 // const sequelize = new Sequelize("voter_hub", "user", "password", {
 //   host: "localhost",
 //   dialect: "postgres",

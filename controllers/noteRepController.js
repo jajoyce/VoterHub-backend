@@ -11,6 +11,7 @@ router.get("/", authorize, async (req, res) => {
     });
     return res.json(notesRep);
   } catch (err) {
+    console.log("GET NOTEREP ERROR", err);
     return res.status(500).send({
       message: err.message || "An error occured retrieving Notes on Reps.",
     });
@@ -33,6 +34,7 @@ router.post("/", authorize, async (req, res) => {
       const noteRep = await NoteRep.create(newNoteRep);
       return res.json(noteRep);
     } catch (err) {
+      console.log("POST NOTEREP ERROR", err);
       return res.status(500).send({
         message: err.message || "An error occurred creating new Note on Rep.",
       });

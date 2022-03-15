@@ -37,7 +37,7 @@ router.post("/register", async (req, res) => {
 
     return res.status(201).json({ jwToken });
   } catch (err) {
-    console.log(err);
+    console.log("REGISTRATION ERROR", err);
     return res.status(500).json(err.message || "Server error during signup.");
   }
 });
@@ -60,7 +60,7 @@ router.post("/login", async (req, res) => {
 
     return res.status(200).json({ jwToken });
   } catch (err) {
-    console.log(err);
+    console.log("LOGIN ERROR", err);
     return res.status(500).json(err.mesage || "Server error during login.");
   }
 });
@@ -71,7 +71,7 @@ router.get("/user", authorize, async (req, res) => {
     const { username, firstName, lastName, address, registeredVoter } = user;
     res.json({ username, firstName, lastName, address, registeredVoter });
   } catch (err) {
-    console.log(err);
+    console.log("GET USER ERROR", err);
     res.status(500).send(err.message || "Error occured retrieving user data.");
   }
 });
@@ -103,7 +103,7 @@ router.put("/user", authorize, async (req, res) => {
       return res.status(200).json({ jwToken });
     }
   } catch (err) {
-    console.log(err);
+    console.log("UPDATE USER ERROR", err);
     res.status(500).send(err.message || "Error occured updating the User.");
   }
 });
@@ -111,10 +111,10 @@ router.put("/user", authorize, async (req, res) => {
 router.delete("/user", authorize, async (req, res) => {
   try {
     const deleted = await User.destroy({ where: { id: req.userID } });
-    console.log("DELETED", deleted);
+    console.log("DELETED USER", deleted);
     res.status(200).json(deleted);
   } catch (err) {
-    console.log(err);
+    console.log("DELETE USER ERROR", err);
     res.status(500).send(err.message || "Error occurred deleting the User.");
   }
 });
