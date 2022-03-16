@@ -9,7 +9,7 @@ router.get("/", authorize, async (req, res) => {
     const notesRep = await NoteRep.findAll({
       where: { userID: req.userID },
     });
-    return res.json(notesRep);
+    return res.status(200).json(notesRep);
   } catch (err) {
     console.log("GET NOTEREP ERROR", err);
     return res.status(500).json({
@@ -32,7 +32,7 @@ router.post("/", authorize, async (req, res) => {
     };
     try {
       const noteRep = await NoteRep.create(newNoteRep);
-      return res.json(noteRep);
+      return res.status(201).json(noteRep);
     } catch (err) {
       console.log("POST NOTEREP ERROR", err);
       return res.status(500).json({
