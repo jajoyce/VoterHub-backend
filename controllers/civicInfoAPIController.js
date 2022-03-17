@@ -5,7 +5,6 @@ const fetch = (...args) =>
 require("dotenv").config();
 const civicAPIURL = "https://civicinfo.googleapis.com/civicinfo/v2";
 const key = process.env.CIVIC_API_KEY;
-// const address = "24 Beacon St, Boston, MA 02133";
 
 const fetchRepsData = async (address) => {
   const repsAPIURL = `${civicAPIURL}/representatives?address=${address}&key=${key}`;
@@ -40,10 +39,6 @@ const parseAndFixRepsData = (repsData) => {
       rep.index = officialIndex;
       rep.office = office.name;
       rep.division = divisions[office.divisionId].name;
-      // console.log("------");
-      // console.log(rep.name);
-      // console.log(rep.office);
-      // console.log(rep.division);
 
       for (fix of fixPhotos) {
         if (rep.name === fix[0] && rep.office === fix[1]) {
