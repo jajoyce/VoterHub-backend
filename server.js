@@ -19,6 +19,7 @@ app.use(express.json());
 app.use("/civicAPI", controllers.civicInfo);
 app.use("/user-auth", controllers.userAuth);
 app.use("/notes-rep", controllers.noteRep);
+app.use("/notes-info", controllers.noteInfo);
 
 app.get("/", (req, res) => {
   res.send("Hello, world. This is working.");
