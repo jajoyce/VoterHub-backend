@@ -40,4 +40,25 @@ router.post("/", authorize, async (req, res) => {
   }
 });
 
+router.put("/", authorize, async (req, res) => {
+  if (!req.body.id || !req.body.content) {
+    return res.status(400).json("Note ID and content required.");
+  }
+  try {
+    const putContent = { content: req.body.content };
+
+    const updated = await NoteInfo.update(putContent, {
+      where: { id: req.body.id, userID: req.userID },
+    });
+
+    if (updated[0]) {
+      console.log("UPDATED INFO NOTE", updated[0]);
+      return res.status(200).json(updated[0]);
+    }
+  } catch (err) {
+    console.log("UPDATE NOTEINFO ERROR", err);
+    res.status(500).json(err.message || "An error occured updating Info Note.");
+  }
+});
+
 module.exports = router;

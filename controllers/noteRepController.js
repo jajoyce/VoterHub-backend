@@ -59,7 +59,7 @@ router.put("/", authorize, async (req, res) => {
     }
   } catch (err) {
     console.log("UPDATE NOTE ERROR", err);
-    res.status(500).json(err.message || "Error occured updating the User.");
+    res.status(500).json(err.message || "Error occured updating Rep Note.");
   }
 });
 
@@ -77,9 +77,8 @@ router.delete("/", authorize, async (req, res) => {
     }
   } catch (err) {
     console.log("DELETE NOTE ERROR", err);
-    res.status(500).send(err.message || "Error occurred deleting the User.");
+    res.status(500).send(err.message || "Error occurred deleting Rep Note.");
   }
 });
-
 
 module.exports = router;
