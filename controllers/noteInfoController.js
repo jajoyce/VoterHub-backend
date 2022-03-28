@@ -61,4 +61,22 @@ router.put("/", authorize, async (req, res) => {
   }
 });
 
+router.delete("/", authorize, async (req, res) => {
+  if (!req.body.id) {
+    return res.status(400).json("Note ID required.");
+  }
+  try {
+    const deleted = await NoteInfo.destroy({
+      where: { id: req.body.id, userID: req.userID },
+    });
+    if (deleted) {
+      console.log("DELETED INFO NOTE", deleted);
+      return res.status(200).json(deleted);
+    }
+  } catch (err) {
+    console.log("DELETE NOTEINFO ERROR", err);
+    res.status(500).send(err.message || "Error occurred deleting Info Note.");
+  }
+});
+
 module.exports = router;
